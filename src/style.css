@@ -1,0 +1,120 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+  }
+
+  /* Allow text selection in input/textarea */
+  input, textarea {
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+  }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background-color: rgb(var(--color-surface));
+    color: rgb(var(--color-text-body));
+    min-height: 100dvh;
+    overflow-x: hidden;
+    overscroll-behavior-y: none;
+    touch-action: pan-y; /* Prevent pinch zoom and pan-x */
+  }
+
+  html {
+    overscroll-behavior-y: none;
+    touch-action: pan-y;
+  }
+
+  :root {
+    --tg-safe-top: env(safe-area-inset-top, 0px);
+    --tg-safe-bottom: env(safe-area-inset-bottom, 0px);
+    --nav-h: 64px;
+
+    /* Channel values (r g b) so Tailwind's opacity modifiers (e.g. bg-surface/70) keep working.
+       Palette pulled from the NVC bison logo: pale pink background, dusty-mauve bison,
+       rose accent. */
+    --color-accent: 201 61 120;        /* #c93d78 rose — buttons, links, active states */
+    --color-accent-hover: 171 47 99;   /* #ab2f63 */
+    --color-brand-50: 253 241 246;     /* #fdf1f6 */
+    --color-brand-100: 251 224 236;    /* #fbe0ec */
+    --color-brand-200: 246 194 218;    /* #f6c2da */
+    --color-brand-400: 214 89 140;     /* #d6598c */
+    --color-brand-500: 201 61 120;     /* #c93d78 (= accent) */
+    --color-brand-600: 171 47 99;      /* #ab2f63 (= accent hover) */
+    --color-brand-700: 135 36 77;      /* #87244d */
+    --color-brand-800: 100 27 58;      /* #641b3a */
+    --color-brand-900: 67 18 40;       /* #431228 */
+    --color-surface: 253 238 245;      /* #fdeef5 page background — pale pink from the logo */
+    --color-surface-card: 255 245 249; /* #fff5f9 cards, slightly lighter than the page */
+    --color-surface-border: 243 206 222; /* #f3cede soft pink border */
+    --color-surface-muted: 248 221 232;  /* #f8dde8 inputs / ghost-button fills */
+    --color-text-body: 107 79 92;      /* #6b4f5c dusty-plum body text (= ink-700) */
+    --color-overlay: 61 42 53;         /* #3d2a35 modal backdrop tint (was pure black) */
+
+    /* On-surface text hierarchy (dusty mauve/plum, echoing the bison illustration) */
+    --color-ink-900: 61 42 53;   /* #3d2a35 headings, highest contrast */
+    --color-ink-800: 81 58 72;   /* #513a48 */
+    --color-ink-700: 107 79 92;  /* #6b4f5c secondary text */
+    --color-ink-600: 138 107 120; /* #8a6b78 */
+    --color-ink-500: 163 128 141; /* #a3808d muted / labels */
+    --color-ink-400: 191 160 172; /* #bfa0ac */
+    --color-ink-300: 220 196 207; /* #dcc4cf faint, borders / disabled icons */
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-surface-card border border-surface-border rounded-2xl;
+  }
+
+  .btn-primary {
+    @apply bg-accent hover:bg-accent-hover active:scale-95
+    text-white font-semibold rounded-2xl px-6 py-3
+    transition-all duration-150 font-body;
+  }
+
+  .btn-ghost {
+    @apply bg-surface-muted hover:bg-surface-border active:scale-95
+    text-ink-600 rounded-2xl px-4 py-2
+    transition-all duration-150;
+  }
+
+  .badge {
+    @apply text-xs font-semibold px-2 py-0.5 rounded-full;
+  }
+
+  .shimmer-bg {
+    background: linear-gradient(
+            90deg,
+            rgb(var(--color-surface-card)) 25%,
+            rgb(var(--color-surface-muted)) 50%,
+            rgb(var(--color-surface-card)) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.6s linear infinite;
+  }
+
+  @keyframes shimmer {
+    from { background-position: -200% 0; }
+    to { background-position: 200% 0; }
+  }
+
+  .status-new       { @apply bg-blue-500/15 text-blue-600 badge; }
+  .status-confirmed { @apply bg-violet-500/15 text-violet-600 badge; }
+  .status-done      { @apply bg-indigo-500/15 text-indigo-600 badge; }
+  .status-cancelled { @apply bg-red-500/15 text-red-600 badge; }
+}
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgb(var(--color-surface-border)); border-radius: 4px; }
