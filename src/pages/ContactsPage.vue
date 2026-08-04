@@ -9,10 +9,10 @@
           <svg class="w-5 h-5" :class="c.color" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" v-html="c.icon" />
         </div>
         <div class="min-w-0">
-          <p class="text-xs text-ink-500">{{ c.label }}</p>
+          <p class="text-xs text-ink-700">{{ c.label }}</p>
           <p class="text-sm font-semibold text-ink-900 truncate">{{ c.value }}</p>
         </div>
-        <svg class="ml-auto w-4 h-4 text-ink-400 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <svg class="ml-auto w-4 h-4 text-ink-700 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M9 18l6-6-6-6"/>
         </svg>
       </a>
@@ -26,9 +26,9 @@
       </div>
       <div v-else class="space-y-1.5">
         <div v-for="day in schedule" :key="day.day" class="flex items-center justify-between">
-          <span class="text-sm text-ink-600 w-28">{{ dayNames[day.day] }}</span>
+          <span class="text-sm text-ink-700 w-28">{{ dayNames[day.day] }}</span>
           <span v-if="day.is_open" class="text-sm text-ink-800">{{ day.open_time }} – {{ day.close_time }}</span>
-          <span v-else class="text-sm text-ink-400">Выходной</span>
+          <span v-else class="text-sm text-ink-700">Выходной</span>
         </div>
       </div>
     </div>
@@ -55,7 +55,7 @@ const contacts = [
     value: 'Night Vape Cloude',
     href: 'https://t.me/c/2620495110/76',
     bg: 'bg-blue-500/15',
-    color: 'text-blue-400',
+    color: 'text-blue-700',
     icon: '<path d="M21.5 2.5l-19 7.5 7 2.5 2.5 7 3-5 5 4 1.5-16z"/><path d="M9.5 12.5l5-3"/>',
   },
   {
@@ -63,7 +63,7 @@ const contacts = [
     value: 'Manager',
     href: 'https://t.me/m_grmk',
     bg: 'bg-indigo-500/15',
-    color: 'text-indigo-400',
+    color: 'text-indigo-600',
     icon: '<path d="M21.5 2.5l-19 7.5 7 2.5 2.5 7 3-5 5 4 1.5-16z"/><path d="M9.5 12.5l5-3"/>',
   },
   {
@@ -71,7 +71,7 @@ const contacts = [
     value: 'Manager',
     href: 'https://t.me/evel1na_dm',
     bg: 'bg-indigo-500/15',
-    color: 'text-indigo-400',
+    color: 'text-indigo-600',
     icon: '<path d="M21.5 2.5l-19 7.5 7 2.5 2.5 7 3-5 5 4 1.5-16z"/><path d="M9.5 12.5l5-3"/>',
   },
   {
@@ -79,7 +79,7 @@ const contacts = [
     value: 'г. Минск, улица Алеся Дудара, 7',
     href: 'https://yandex.by/maps/157/minsk/house/Zk4Ycw9jT0UBQFtpfXR1cXRhbQ==/?ll=27.583353%2C53.840733&z=17.25',
     bg: 'bg-amber-500/15',
-    color: 'text-amber-400',
+    color: 'text-amber-800',
     icon: '<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>',
   },
 ]

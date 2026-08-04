@@ -1,7 +1,7 @@
 <template>
   <RouterLink :to="to"
     class="flex flex-1 flex-col items-center justify-center gap-0.5 transition-colors duration-150 relative"
-    :class="isActive ? 'text-brand-400' : 'text-ink-500 hover:text-ink-700'"
+    :class="isActive ? 'text-brand-400' : 'text-ink-700 hover:text-ink-700'"
     @click="haptic('light')"
   >
     <div class="relative">

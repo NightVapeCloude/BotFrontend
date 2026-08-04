@@ -1,7 +1,7 @@
 <template>
   <div class="space-y-3">
     <div class="flex items-center justify-between">
-      <p class="text-sm text-ink-600">Всего: {{ orders.length }}</p>
+      <p class="text-sm text-ink-700">Всего: {{ orders.length }}</p>
       <button class="btn-ghost text-xs px-3 py-1.5" @click="load">Обновить</button>
     </div>
 
@@ -13,14 +13,14 @@
       <div v-for="order in orders" :key="order.id" class="card p-3 space-y-2">
         <div class="flex items-start justify-between">
           <div>
-            <p class="text-xs text-ink-500 font-mono">#{{ order.id.slice(-6).toUpperCase() }}</p>
+            <p class="text-xs text-ink-700 font-mono">#{{ order.id.slice(-6).toUpperCase() }}</p>
             <p class="text-sm font-semibold text-ink-900">{{ order.tg_username }}</p>
-            <p class="text-xs text-ink-500 mt-0.5">{{ order.pickup_time }} · {{ formatDate(order.created_at) }}</p>
+            <p class="text-xs text-ink-700 mt-0.5">{{ order.pickup_time }} · {{ formatDate(order.created_at) }}</p>
           </div>
           <StatusBadge :status="order.status" />
         </div>
 
-        <div class="text-xs text-ink-500 space-y-0.5">
+        <div class="text-xs text-ink-700 space-y-0.5">
           <div v-for="item in order.items" :key="item.product.id">
             {{ item.product.name }} × {{ item.quantity }}
           </div>
@@ -29,12 +29,12 @@
         <div class="flex items-center justify-between pt-1 border-t border-surface-border">
           <div>
             <div class="flex items-center gap-1">
-              <span class="font-display font-bold text-indigo-400 text-sm">{{ formatPrice(order.total) }}</span>
-              <BynIcon :size="12" class="text-indigo-400" />
+              <span class="font-display font-bold text-indigo-600 text-sm">{{ formatPrice(order.total) }}</span>
+              <BynIcon :size="12" class="text-indigo-600" />
             </div>
             <div v-if="order.discount_amount > 0" class="flex items-center gap-1 mt-0.5">
-              <span class="text-xs text-green-400">скидка −{{ formatPrice(order.discount_amount) }}</span>
-              <BynIcon :size="10" class="text-green-400" />
+              <span class="text-xs text-green-800">скидка −{{ formatPrice(order.discount_amount) }}</span>
+              <BynIcon :size="10" class="text-green-800" />
             </div>
           </div>
           <div class="flex gap-1.5">
@@ -49,7 +49,7 @@
       </div>
     </div>
 
-    <p v-else class="text-ink-400 text-sm">Заказов нет</p>
+    <p v-else class="text-ink-700 text-sm">Заказов нет</p>
   </div>
 </template>
 
@@ -75,12 +75,12 @@ function formatDate(s: string) {
 function statusActions(status: OrderStatus) {
   const map: Record<OrderStatus, { status: OrderStatus; label: string; cls: string }[]> = {
     new: [
-      { status: 'confirmed', label: 'Подтвердить', cls: 'bg-amber-500/20 text-amber-400' },
-      { status: 'cancelled', label: 'Отменить', cls: 'bg-red-500/15 text-red-400' },
+      { status: 'confirmed', label: 'Подтвердить', cls: 'bg-amber-500/20 text-amber-800' },
+      { status: 'cancelled', label: 'Отменить', cls: 'bg-red-500/15 text-red-700' },
     ],
     confirmed: [
-      { status: 'done', label: 'Выдан', cls: 'bg-indigo-500/20 text-indigo-400' },
-      { status: 'cancelled', label: 'Отменить', cls: 'bg-red-500/15 text-red-400' },
+      { status: 'done', label: 'Выдан', cls: 'bg-indigo-500/20 text-indigo-600' },
+      { status: 'cancelled', label: 'Отменить', cls: 'bg-red-500/15 text-red-700' },
     ],
     done: [], cancelled: [],
   }

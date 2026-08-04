@@ -1,7 +1,7 @@
 <template>
   <div class="animate-fade-in">
     <div class="px-4 pt-4 pb-2">
-      <button class="inline-flex items-center gap-1.5 text-ink-600 hover:text-ink-900 text-sm transition-colors"
+      <button class="inline-flex items-center gap-1.5 text-ink-700 hover:text-ink-900 text-sm transition-colors"
         @click="$router.back()">
         <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M19 12H5M12 19l-7-7 7-7"/>
@@ -20,7 +20,7 @@
       <div class="aspect-video bg-surface-muted overflow-hidden">
         <img v-if="product.image_url" :src="product.image_url" :alt="product.name"
           class="w-full h-full object-cover" />
-        <div v-else class="w-full h-full flex items-center justify-center text-ink-300">
+        <div v-else class="w-full h-full flex items-center justify-center text-ink-700">
           <svg class="w-20 h-20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.8">
             <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
           </svg>
@@ -32,17 +32,17 @@
           <div class="flex items-start justify-between gap-3">
             <h1 class="font-display text-lg font-bold text-ink-900 leading-snug flex-1">{{ product.name }}</h1>
             <div v-if="ssub" class="flex items-center gap-1 flex-shrink-0">
-              <span class="font-display text-indigo-400 font-bold text-xl">{{ formatPrice(ssub.price) }}</span>
-              <BynIcon :size="16" class="text-indigo-400" />
+              <span class="font-display text-indigo-600 font-bold text-xl">{{ formatPrice(ssub.price) }}</span>
+              <BynIcon :size="16" class="text-indigo-600" />
             </div>
           </div>
           <div class="flex items-center gap-2 mt-2 flex-wrap">
-            <span v-if="ssub?.strength" class="badge bg-violet-500/15 text-violet-300">{{ ssub.strength }}</span>
-            <span v-if="ssub" class="badge bg-surface-muted text-ink-600">{{ ssub.name }}</span>
-            <span v-if="product.stock > 0" class="badge bg-indigo-500/15 text-indigo-400">В наличии</span>
-            <span v-else class="badge bg-red-500/15 text-red-400">Нет в наличии</span>
+            <span v-if="ssub?.strength" class="badge bg-violet-500/15 text-violet-600">{{ ssub.strength }}</span>
+            <span v-if="ssub" class="badge bg-surface-muted text-ink-700">{{ ssub.name }}</span>
+            <span v-if="product.stock > 0" class="badge bg-indigo-500/15 text-indigo-600">В наличии</span>
+            <span v-else class="badge bg-red-500/15 text-red-700">Нет в наличии</span>
             <span v-if="product.stock > 0 && product.stock <= 5"
-              class="badge bg-amber-500/15 text-amber-400">Осталось {{ product.stock }} шт</span>
+              class="badge bg-amber-500/15 text-amber-800">Осталось {{ product.stock }} шт</span>
           </div>
         </div>
 
@@ -55,7 +55,7 @@
               </button>
               <span class="flex-1 text-center font-display font-bold text-ink-900">{{ inCart.quantity }}</span>
               <button
-                class="w-9 h-9 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center active:scale-90 transition-transform"
+                class="w-9 h-9 rounded-xl bg-indigo-500/20 text-indigo-600 flex items-center justify-center active:scale-90 transition-transform"
                 :class="{ 'opacity-40 pointer-events-none': inCart.quantity >= product.stock }"
                 @click="inc">
                 <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
@@ -65,7 +65,7 @@
           </div>
           <button v-else class="btn-primary w-full" @click="add">Добавить в корзину</button>
         </div>
-        <div v-else class="w-full py-3 rounded-2xl bg-surface-muted text-center text-ink-500 text-sm">
+        <div v-else class="w-full py-3 rounded-2xl bg-surface-muted text-center text-ink-700 text-sm">
           Нет в наличии
         </div>
       </div>

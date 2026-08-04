@@ -2,35 +2,35 @@
   <div class="card p-3 space-y-2">
     <div class="flex items-start justify-between gap-2">
       <div>
-        <p class="text-xs text-ink-500 font-mono">#{{ order.id.slice(-6).toUpperCase() }}</p>
+        <p class="text-xs text-ink-700 font-mono">#{{ order.id.slice(-6).toUpperCase() }}</p>
         <p class="text-sm font-semibold text-ink-900 mt-0.5">{{ order.pickup_time }}</p>
-        <p class="text-xs text-ink-500 mt-0.5">{{ formatDate(order.created_at) }}</p>
+        <p class="text-xs text-ink-700 mt-0.5">{{ formatDate(order.created_at) }}</p>
       </div>
       <StatusBadge :status="order.status" />
     </div>
 
     <div class="space-y-1">
       <div v-for="item in order.items" :key="item.product.id"
-        class="flex items-center justify-between text-xs text-ink-600">
+        class="flex items-center justify-between text-xs text-ink-700">
         <span class="truncate flex-1">{{ item.product.name }} × {{ item.quantity }}</span>
         <div class="flex items-center gap-0.5 flex-shrink-0 ml-2">
           <span class="text-ink-700">{{ formatPrice(item.price * item.quantity) }}</span>
-          <BynIcon :size="10" class="text-ink-600" />
+          <BynIcon :size="10" class="text-ink-700" />
         </div>
       </div>
     </div>
 
     <div class="flex items-center justify-between pt-1.5 border-t border-surface-border">
       <div class="flex flex-col">
-        <span class="text-xs text-ink-500">{{ order.tg_username }}</span>
-        <div v-if="order.discount_amount > 0" class="text-xs text-green-400">
+        <span class="text-xs text-ink-700">{{ order.tg_username }}</span>
+        <div v-if="order.discount_amount > 0" class="text-xs text-green-800">
           Скидка −{{ formatPrice(order.discount_amount) }}
-          <BynIcon :size="9" class="inline text-green-400" />
+          <BynIcon :size="9" class="inline text-green-800" />
         </div>
       </div>
       <div class="flex items-center gap-1">
-        <span class="font-display font-bold text-indigo-400 text-sm">{{ formatPrice(order.total) }}</span>
-        <BynIcon :size="12" class="text-indigo-400" />
+        <span class="font-display font-bold text-indigo-600 text-sm">{{ formatPrice(order.total) }}</span>
+        <BynIcon :size="12" class="text-indigo-600" />
       </div>
     </div>
   </div>

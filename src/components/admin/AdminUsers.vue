@@ -1,7 +1,7 @@
 <template>
   <div class="space-y-3">
     <div class="flex items-center justify-between">
-      <p class="text-sm text-ink-600">Всего: {{ users.length }}</p>
+      <p class="text-sm text-ink-700">Всего: {{ users.length }}</p>
       <button class="btn-ghost text-xs px-3 py-1.5" @click="load">Обновить</button>
     </div>
 
@@ -15,13 +15,13 @@
           <div>
             <p class="text-sm font-semibold text-ink-900">
               {{ u.first_name || '—' }}
-              <span v-if="u.username" class="text-ink-500 font-normal">@{{ u.username }}</span>
+              <span v-if="u.username" class="text-ink-700 font-normal">@{{ u.username }}</span>
             </p>
-            <p class="text-xs text-ink-500 font-mono mt-0.5">{{ u.tg_user_id }}</p>
+            <p class="text-xs text-ink-700 font-mono mt-0.5">{{ u.tg_user_id }}</p>
           </div>
-          <p class="text-xs text-ink-500">{{ formatDate(u.reg_date) }}</p>
+          <p class="text-xs text-ink-700">{{ formatDate(u.reg_date) }}</p>
         </div>
-        <div class="flex items-center gap-3 text-xs text-ink-500 pt-1 border-t border-surface-border">
+        <div class="flex items-center gap-3 text-xs text-ink-700 pt-1 border-t border-surface-border">
           <span v-if="u.referred_by">Приглашён: {{ u.referred_by }}</span>
           <span>Реф. использовано: {{ u.referral_credits_used }}</span>
           <span>Реф. заработано: {{ u.referral_credits_earned }}</span>
@@ -29,7 +29,7 @@
       </div>
     </div>
 
-    <p v-else class="text-ink-400 text-sm">Пользователей нет</p>
+    <p v-else class="text-ink-700 text-sm">Пользователей нет</p>
   </div>
 </template>
 

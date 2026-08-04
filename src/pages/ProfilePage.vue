@@ -9,8 +9,8 @@
       </div>
       <div class="min-w-0">
         <p class="font-display font-bold text-ink-900 text-base">{{ fullName }}</p>
-        <p v-if="user?.username" class="text-ink-500 text-sm mt-0.5">@{{ user.username }}</p>
-        <p class="text-ink-400 text-xs mt-1">Зарегистрирован {{ regDateLabel }}</p>
+        <p v-if="user?.username" class="text-ink-700 text-sm mt-0.5">@{{ user.username }}</p>
+        <p class="text-ink-700 text-xs mt-1">Зарегистрирован {{ regDateLabel }}</p>
       </div>
     </div>
 
@@ -18,7 +18,7 @@
     <section v-if="profile?.referral_link" class="card p-4 space-y-3">
       <div>
         <h2 class="section-title mb-1">Пригласи друга</h2>
-        <p class="text-xs text-ink-500">
+        <p class="text-xs text-ink-700">
           Скидка станет доступна после первого выданного заказа приглашённого
         </p>
       </div>
@@ -35,10 +35,10 @@
           {{ copied ? '✓' : 'Скопировать' }}
         </button>
       </div>
-      <p v-if="profile.referral_credits_available > 0" class="text-xs text-green-400">
+      <p v-if="profile.referral_credits_available > 0" class="text-xs text-green-800">
         Доступно реферальных скидок: {{ profile.referral_credits_available }}
       </p>
-      <p v-else class="text-xs text-ink-500">
+      <p v-else class="text-xs text-ink-700">
         Доступных реферальных скидок пока нет
       </p>
     </section>
@@ -59,19 +59,19 @@
             <p class="text-sm font-semibold text-ink-900 truncate">
               {{ ref.username || '— без username —' }}
             </p>
-            <p v-if="ref.reg_date" class="text-xs text-ink-500 mt-0.5">
+            <p v-if="ref.reg_date" class="text-xs text-ink-700 mt-0.5">
               {{ formatDate(ref.reg_date) }}
             </p>
           </div>
           <div class="text-right flex-shrink-0">
-            <p class="text-xs text-ink-600">Заказов: {{ ref.orders_count }}</p>
-            <p class="text-xs mt-0.5" :class="ref.qualified ? 'text-green-400' : 'text-amber-400'">
+            <p class="text-xs text-ink-700">Заказов: {{ ref.orders_count }}</p>
+            <p class="text-xs mt-0.5" :class="ref.qualified ? 'text-green-800' : 'text-amber-800'">
               {{ ref.qualified ? '✓ Скидка доступна' : '⏳ Ждём заказ' }}
             </p>
           </div>
         </div>
       </div>
-      <p v-else class="text-ink-400 text-sm">Приглашённых пользователей пока нет</p>
+      <p v-else class="text-ink-700 text-sm">Приглашённых пользователей пока нет</p>
     </section>
 
     <!-- Active orders -->
@@ -83,7 +83,7 @@
       <div v-else-if="activeOrders.length" class="space-y-2">
         <OrderCard v-for="o in activeOrders" :key="o.id" :order="o" />
       </div>
-      <p v-else class="text-ink-400 text-sm">Активных заказов нет</p>
+      <p v-else class="text-ink-700 text-sm">Активных заказов нет</p>
     </section>
 
     <!-- Order history -->
@@ -157,6 +157,6 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.section-title { @apply font-display text-xs font-semibold text-ink-500 uppercase tracking-widest mb-2; }
+.section-title { @apply font-display text-xs font-semibold text-ink-700 uppercase tracking-widest mb-2; }
 .form-input { @apply w-full bg-surface-muted border border-surface-border rounded-xl px-3 py-2.5 text-sm text-ink-900 outline-none; }
 </style>

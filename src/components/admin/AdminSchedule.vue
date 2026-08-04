@@ -2,7 +2,7 @@
   <div class="space-y-3">
     <div class="flex items-center justify-between">
       <div class="flex items-center gap-2">
-        <span class="text-xs text-ink-500">Интервал:</span>
+        <span class="text-xs text-ink-700">Интервал:</span>
         <select v-model="interval" class="bg-surface-muted border border-surface-border rounded-lg px-2 py-1 text-xs text-ink-800 outline-none focus:border-indigo-500">
           <option :value="5">5 мин</option>
           <option :value="10">10 мин</option>
@@ -33,34 +33,34 @@
             </div>
           </label>
           <span class="w-8 text-sm font-semibold flex-shrink-0"
-            :class="day.is_open ? 'text-ink-900' : 'text-ink-400'">
+            :class="day.is_open ? 'text-ink-900' : 'text-ink-700'">
             {{ dayNames[day.day] }}
           </span>
           <template v-if="day.is_open">
             <div class="flex items-center gap-2 flex-1">
               <input type="time" v-model="day.open_time" class="time-input" />
-              <span class="text-ink-400 text-sm">—</span>
+              <span class="text-ink-700 text-sm">—</span>
               <input type="time" v-model="day.close_time" class="time-input" />
             </div>
-            <span class="text-xs text-ink-500 flex-shrink-0 w-16 text-right">
+            <span class="text-xs text-ink-700 flex-shrink-0 w-16 text-right">
               {{ slotCount(day) }} слотов
             </span>
           </template>
-          <span v-else class="text-sm text-ink-400 flex-1">Выходной</span>
+          <span v-else class="text-sm text-ink-700 flex-1">Выходной</span>
         </div>
       </div>
     </div>
 
     <!-- Превью слотов сегодня -->
     <div v-if="!loading && todayPreview" class="card p-3">
-      <p class="text-xs text-ink-500 mb-2">Слоты на сегодня ({{ dayNames[todayPreview.day] }}) · {{ interval }} мин</p>
+      <p class="text-xs text-ink-700 mb-2">Слоты на сегодня ({{ dayNames[todayPreview.day] }}) · {{ interval }} мин</p>
       <div v-if="todayPreview.is_open" class="flex flex-wrap gap-1.5">
         <span v-for="slot in previewSlots" :key="slot"
-          class="text-xs px-2 py-1 bg-indigo-500/10 text-indigo-400 rounded-lg font-mono">
+          class="text-xs px-2 py-1 bg-indigo-500/10 text-indigo-600 rounded-lg font-mono">
           {{ slot }}
         </span>
       </div>
-      <p v-else class="text-sm text-ink-400">Сегодня выходной</p>
+      <p v-else class="text-sm text-ink-700">Сегодня выходной</p>
     </div>
   </div>
 </template>

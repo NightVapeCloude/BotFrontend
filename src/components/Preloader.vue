@@ -8,7 +8,7 @@
         </div>
         <div class="text-center">
           <h2 class="font-display text-lg font-bold text-ink-900">Загрузка...</h2>
-          <p class="text-sm text-ink-500 mt-1">Пожалуйста, подождите</p>
+          <p class="text-sm text-ink-700 mt-1">Пожалуйста, подождите</p>
         </div>
       </div>
     </div>

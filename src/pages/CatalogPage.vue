@@ -5,7 +5,7 @@
     <template v-if="!activeCategory">
       <div class="px-4 pt-6 pb-4">
         <h1 class="font-display text-xl font-bold text-ink-900 mb-1">Каталог</h1>
-        <p class="text-ink-500 text-sm">Выберите категорию</p>
+        <p class="text-ink-700 text-sm">Выберите категорию</p>
       </div>
       <div v-if="loading" class="px-4 grid grid-cols-2 gap-3">
         <SkeletonBox v-for="i in 4" :key="i" height="120px" width="100%" />
@@ -29,7 +29,7 @@
         <div class="flex items-center gap-3">
           <button class="w-8 h-8 rounded-xl bg-surface-muted flex items-center justify-center active:scale-90 transition-transform"
             @click="activeCategory = null">
-            <svg class="w-4 h-4 text-ink-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            <svg class="w-4 h-4 text-ink-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
           </button>
           <h1 class="font-display text-base font-bold text-ink-900">{{ activeCategory.name }}</h1>
         </div>
@@ -39,7 +39,7 @@
           class="card p-4 flex flex-col items-start gap-2 active:scale-95 transition-transform duration-150 text-left"
           @click="activeSubCategory = sub">
           <span class="font-display font-semibold text-sm text-ink-900">{{ sub.name }}</span>
-          <span class="text-xs text-ink-500">{{ subSubCount(sub.id) }} линеек</span>
+          <span class="text-xs text-ink-700">{{ subSubCount(sub.id) }} линеек</span>
         </button>
       </div>
     </template>
@@ -50,16 +50,16 @@
         <div class="flex items-center gap-3 mb-3">
           <button class="w-8 h-8 rounded-xl bg-surface-muted flex items-center justify-center active:scale-90 transition-transform"
             @click="activeSubCategory = null">
-            <svg class="w-4 h-4 text-ink-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            <svg class="w-4 h-4 text-ink-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
           </button>
-          <p class="text-xs text-ink-500">{{ activeCategory.name }} / {{ activeSubCategory.name }}</p>
+          <p class="text-xs text-ink-700">{{ activeCategory.name }} / {{ activeSubCategory.name }}</p>
         </div>
         <div class="relative">
-          <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-ink-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-ink-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
           </svg>
           <input v-model="search" type="search" placeholder="Поиск вкуса..."
-            class="w-full bg-surface-card border border-surface-border rounded-xl pl-9 pr-4 py-2 text-sm text-ink-800 placeholder-ink-400 outline-none focus:border-indigo-500 transition-colors" />
+            class="w-full bg-surface-card border border-surface-border rounded-xl pl-9 pr-4 py-2 text-sm text-ink-800 placeholder-ink-700 outline-none focus:border-indigo-500 transition-colors" />
         </div>
       </div>
 
@@ -75,12 +75,12 @@
             <div class="flex items-center gap-2">
               <div v-if="group.ssub.strength"
                 class="bg-violet-500/15 border border-violet-500/20 px-2.5 py-1 rounded-lg">
-                <span class="text-violet-300 font-semibold text-xs">{{ group.ssub.strength }}</span>
+                <span class="text-violet-600 font-semibold text-xs">{{ group.ssub.strength }}</span>
               </div>
               <!-- Цена ПЕРЕД символом -->
               <div class="flex items-center gap-1 bg-indigo-500/15 border border-indigo-500/20 px-2.5 py-1 rounded-lg">
-                <span class="text-indigo-400 font-display font-bold text-xs">{{ formatPrice(group.ssub.price) }}</span>
-                <BynIcon :size="11" class="text-indigo-400" />
+                <span class="text-indigo-600 font-display font-bold text-xs">{{ formatPrice(group.ssub.price) }}</span>
+                <BynIcon :size="11" class="text-indigo-600" />
               </div>
             </div>
           </div>
@@ -97,7 +97,7 @@
         </div>
       </div>
 
-      <div v-else class="text-center py-20 text-ink-400">
+      <div v-else class="text-center py-20 text-ink-700">
         <p class="text-4xl mb-3">🔍</p>
         <p class="text-sm">Ничего не найдено</p>
       </div>

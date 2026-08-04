@@ -11,14 +11,14 @@
         <div class="flex items-start justify-between gap-2">
           <div class="min-w-0 flex-1">
             <p class="text-sm font-semibold text-ink-900 truncate">{{ item.title }}</p>
-            <p class="text-xs text-ink-500 mt-0.5">{{ subtext(item) }}</p>
+            <p class="text-xs text-ink-700 mt-0.5">{{ subtext(item) }}</p>
           </div>
           <div class="flex items-center gap-1.5 flex-shrink-0">
             <span class="w-1.5 h-1.5 rounded-full" :class="item.is_active ? 'bg-indigo-400' : 'bg-ink-400'" />
-            <button class="p-1.5 rounded-lg hover:bg-surface-muted transition-colors text-ink-600 hover:text-ink-800" @click="openForm(item)">
+            <button class="p-1.5 rounded-lg hover:bg-surface-muted transition-colors text-ink-700 hover:text-ink-800" @click="openForm(item)">
               <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
             </button>
-            <button class="p-1.5 rounded-lg hover:bg-red-500/15 transition-colors text-ink-400 hover:text-red-400" @click="del(item.id)">
+            <button class="p-1.5 rounded-lg hover:bg-red-500/15 transition-colors text-ink-700 hover:text-red-700" @click="del(item.id)">
               <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 6h18M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6M10 11v6M14 11v6M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>
             </button>
           </div>
@@ -34,7 +34,7 @@
           :style="{ paddingBottom: 'calc(20px + var(--tg-safe-bottom))' }">
           <div class="flex items-center justify-between mb-1">
             <h3 class="font-display font-semibold text-ink-900 text-sm">{{ editing ? 'Редактировать' : 'Добавить' }}</h3>
-            <button class="text-ink-500 hover:text-ink-900" @click="showForm = false">
+            <button class="text-ink-700 hover:text-ink-900" @click="showForm = false">
               <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
             </button>
           </div>
@@ -62,21 +62,21 @@
             </div>
 
             <div class="border-t border-surface-border pt-3">
-              <p class="text-xs font-semibold text-ink-600 mb-3">Условия (оставь пустым если не нужно)</p>
+              <p class="text-xs font-semibold text-ink-700 mb-3">Условия (оставь пустым если не нужно)</p>
               <div class="space-y-3">
 
                 <div>
                   <label class="form-label">Минимум товаров в корзине</label>
                   <input v-model.number="formData.min_items" type="number" min="0" class="form-input"
                     placeholder="0 — условие не активно" />
-                  <p class="text-[10px] text-ink-400 mt-1">Например 3 — скидка только при заказе от 3 единиц</p>
+                  <p class="text-[10px] text-ink-700 mt-1">Например 3 — скидка только при заказе от 3 единиц</p>
                 </div>
 
                 <label class="flex items-center gap-3 cursor-pointer">
                   <input v-model="formData.requires_group" type="checkbox" class="w-4 h-4 rounded accent-indigo-500" />
                   <div>
                     <p class="text-sm text-ink-800">Проверять участие в группе</p>
-                    <p class="text-[10px] text-ink-400 mt-0.5">Бот проверит состоит ли пользователь в вашей группе</p>
+                    <p class="text-[10px] text-ink-700 mt-0.5">Бот проверит состоит ли пользователь в вашей группе</p>
                   </div>
                 </label>
 
@@ -84,7 +84,7 @@
                   <input v-model="formData.is_referral" type="checkbox" class="w-4 h-4 rounded accent-indigo-500" />
                   <div>
                     <p class="text-sm text-ink-800">Реферальная скидка</p>
-                    <p class="text-[10px] text-ink-400 mt-0.5">
+                    <p class="text-[10px] text-ink-700 mt-0.5">
                       Доступна только при наличии приглашённых с выданным заказом (1 приглашение = 1 использование)
                     </p>
                   </div>
@@ -100,7 +100,7 @@
                     <input v-model="formData.reg_date_to" type="date" class="form-input" />
                   </div>
                 </div>
-                <p class="text-[10px] text-ink-400">Дата первого входа пользователя в бота (/start)</p>
+                <p class="text-[10px] text-ink-700">Дата первого входа пользователя в бота (/start)</p>
               </div>
             </div>
           </template>
@@ -201,6 +201,6 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.form-label { @apply block text-xs font-semibold text-ink-500 mb-1.5; }
+.form-label { @apply block text-xs font-semibold text-ink-700 mb-1.5; }
 .form-input { @apply w-full bg-surface-muted border border-surface-border rounded-xl px-3 py-2.5 text-sm text-ink-900 outline-none focus:border-indigo-500 transition-colors resize-none; }
 </style>
