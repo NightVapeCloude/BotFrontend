@@ -28,9 +28,9 @@
 
     <!-- Modal -->
     <Teleport to="body">
-      <div v-if="showForm" class="fixed inset-0 z-[100] overflow-y-auto overscroll-y-contain"
+      <div v-if="showForm" class="fixed inset-0 z-[100]"
         style="background:rgb(var(--color-overlay) / 0.7)" @click.self="showForm = false">
-        <div class="fixed bottom-0 left-0 right-0 bg-surface-card border border-surface-border rounded-t-3xl p-5 space-y-3 animate-slide-up"
+        <div class="fixed bottom-0 left-0 right-0 max-h-[85dvh] overflow-y-auto overscroll-contain bg-surface-card border border-surface-border rounded-t-3xl p-5 space-y-3 animate-slide-up"
           :style="{ paddingBottom: 'calc(20px + var(--tg-safe-bottom))' }">
           <div class="flex items-center justify-between mb-1">
             <h3 class="font-display font-semibold text-ink-900 text-sm">{{ editing ? 'Редактировать' : 'Добавить' }}</h3>
@@ -91,13 +91,13 @@
                 </label>
 
                 <div class="grid grid-cols-2 gap-2">
-                  <div>
+                  <div class="min-w-0">
                     <label class="form-label">Регистрация с</label>
-                    <input v-model="formData.reg_date_from" type="date" class="form-input" />
+                    <input v-model="formData.reg_date_from" type="date" class="form-input min-w-0" />
                   </div>
-                  <div>
+                  <div class="min-w-0">
                     <label class="form-label">Регистрация по</label>
-                    <input v-model="formData.reg_date_to" type="date" class="form-input" />
+                    <input v-model="formData.reg_date_to" type="date" class="form-input min-w-0" />
                   </div>
                 </div>
                 <p class="text-[10px] text-ink-700">Дата первого входа пользователя в бота (/start)</p>
