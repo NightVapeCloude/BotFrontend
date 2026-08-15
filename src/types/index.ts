@@ -89,6 +89,9 @@ export interface AvailableDay {
   slots: string[]
 }
 
+export type FulfillmentType = 'pickup' | 'delivery'
+export type DeliveryZone = 'minsk' | 'loshitsa'
+
 export interface Order {
   id: string
   tg_username: string
@@ -100,6 +103,10 @@ export interface Order {
   pickup_time: string
   status: OrderStatus
   created_at: string
+  fulfillment_type: FulfillmentType
+  delivery_zone: DeliveryZone | ''
+  delivery_address: string
+  delivery_cost: number
 }
 
 export type OrderStatus = 'new' | 'confirmed' | 'done' | 'cancelled'

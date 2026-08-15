@@ -108,6 +108,13 @@
             <BynIcon :size="11" class="text-green-800" />
           </div>
         </div>
+        <div v-if="fulfillmentType === 'delivery' && deliveryCost" class="flex justify-between items-center text-sm">
+          <span class="text-ink-700">Доставка</span>
+          <div class="flex items-center gap-1 text-ink-800">
+            <span>{{ formatPrice(deliveryCost) }}</span>
+            <BynIcon :size="11" class="text-ink-700" />
+          </div>
+        </div>
         <div class="flex justify-between items-center pt-2 border-t border-surface-border">
           <span class="text-ink-900 font-semibold">Итого</span>
           <div class="flex items-center gap-1">
@@ -115,6 +122,9 @@
             <BynIcon :size="14" class="text-ink-900" />
           </div>
         </div>
+        <p v-if="fulfillmentType === 'delivery' && deliveryZone === 'minsk'" class="text-[11px] text-ink-700 pt-1">
+          Стоимость доставки по Минску (5–10 Br) подтвердит менеджер после оформления заказа — в «Итого» пока не включена.
+        </p>
       </div>
 
       <!-- Форма -->
@@ -129,31 +139,95 @@
         </div>
 
         <div>
-          <label class="form-label">Дата самовывоза</label>
-          <div v-if="loadingDays" class="form-input text-ink-700 text-sm">Загрузка расписания...</div>
-          <div v-else-if="!availableDays.length" class="form-input text-red-700 text-sm">Нет доступных дней</div>
-          <div v-else class="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
-            <button v-for="day in availableDays" :key="day.date"
-              class="flex-shrink-0 px-3 py-2 rounded-xl text-xs font-semibold transition-all duration-150 active:scale-95"
-              :class="selectedDate === day.date ? 'bg-indigo-500 text-white' : 'bg-surface-muted border border-surface-border text-ink-700'"
-              @click="selectDate(day)">
-              {{ day.label }}
+          <label class="form-label">Способ получения</label>
+          <div class="grid grid-cols-2 gap-2">
+            <button type="button"
+              class="py-2.5 rounded-xl text-sm font-semibold transition-all duration-150 active:scale-95"
+              :class="fulfillmentType === 'pickup' ? 'bg-indigo-500 text-white' : 'bg-surface-muted border border-surface-border text-ink-700'"
+              @click="fulfillmentType = 'pickup'">
+              Самовывоз
+            </button>
+            <button type="button"
+              class="py-2.5 rounded-xl text-sm font-semibold transition-all duration-150 active:scale-95"
+              :class="fulfillmentType === 'delivery' ? 'bg-indigo-500 text-white' : 'bg-surface-muted border border-surface-border text-ink-700'"
+              @click="fulfillmentType = 'delivery'">
+              Доставка
             </button>
           </div>
         </div>
 
-        <div v-if="selectedDate">
-          <label class="form-label">Время</label>
-          <div class="grid grid-cols-4 gap-1.5">
-            <button v-for="slot in selectedDaySlots" :key="slot"
-              class="py-2 rounded-xl text-xs font-semibold transition-all duration-150 active:scale-95"
-              :class="form.pickup_time === slot ? 'bg-indigo-500 text-white' : 'bg-surface-muted border border-surface-border text-ink-700'"
-              @click="form.pickup_time = slot">
-              {{ slot }}
-            </button>
+        <!-- Самовывоз -->
+        <template v-if="fulfillmentType === 'pickup'">
+          <div>
+            <label class="form-label">Дата самовывоза</label>
+            <div v-if="loadingDays" class="form-input text-ink-700 text-sm">Загрузка расписания...</div>
+            <div v-else-if="!availableDays.length" class="form-input text-red-700 text-sm">Нет доступных дней</div>
+            <div v-else class="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
+              <button v-for="day in availableDays" :key="day.date"
+                class="flex-shrink-0 px-3 py-2 rounded-xl text-xs font-semibold transition-all duration-150 active:scale-95"
+                :class="selectedDate === day.date ? 'bg-indigo-500 text-white' : 'bg-surface-muted border border-surface-border text-ink-700'"
+                @click="selectDate(day)">
+                {{ day.label }}
+              </button>
+            </div>
           </div>
-          <p v-if="errors.pickup_time" class="text-red-700 text-xs mt-1">{{ errors.pickup_time }}</p>
-        </div>
+
+          <div v-if="selectedDate">
+            <label class="form-label">Время</label>
+            <div class="grid grid-cols-4 gap-1.5">
+              <button v-for="slot in selectedDaySlots" :key="slot"
+                class="py-2 rounded-xl text-xs font-semibold transition-all duration-150 active:scale-95"
+                :class="form.pickup_time === slot ? 'bg-indigo-500 text-white' : 'bg-surface-muted border border-surface-border text-ink-700'"
+                @click="form.pickup_time = slot">
+                {{ slot }}
+              </button>
+            </div>
+            <p v-if="errors.pickup_time" class="text-red-700 text-xs mt-1">{{ errors.pickup_time }}</p>
+          </div>
+        </template>
+
+        <!-- Доставка -->
+        <template v-else>
+          <div>
+            <label class="form-label">Район</label>
+            <div class="grid grid-cols-2 gap-2">
+              <button type="button"
+                class="py-2.5 px-2 rounded-xl text-xs font-semibold transition-all duration-150 active:scale-95 leading-snug"
+                :class="deliveryZone === 'minsk' ? 'bg-indigo-500 text-white' : 'bg-surface-muted border border-surface-border text-ink-700'"
+                @click="deliveryZone = 'minsk'">
+                Минск / по метро
+              </button>
+              <button type="button"
+                class="py-2.5 px-2 rounded-xl text-xs font-semibold transition-all duration-150 active:scale-95 leading-snug"
+                :class="deliveryZone === 'loshitsa' ? 'bg-indigo-500 text-white' : 'bg-surface-muted border border-surface-border text-ink-700'"
+                @click="deliveryZone = 'loshitsa'">
+                Лошица-2
+              </button>
+            </div>
+            <p v-if="errors.delivery_zone" class="text-red-700 text-xs mt-1">{{ errors.delivery_zone }}</p>
+          </div>
+
+          <div>
+            <label class="form-label">Адрес доставки</label>
+            <textarea v-model="deliveryAddress" rows="2" placeholder="Улица, дом, подъезд, этаж/квартира"
+              class="form-input resize-none" />
+            <p v-if="errors.delivery_address" class="text-red-700 text-xs mt-1">{{ errors.delivery_address }}</p>
+          </div>
+
+          <div v-if="deliveryZone" class="bg-surface-muted rounded-xl p-3 text-xs text-ink-700 leading-relaxed space-y-1.5">
+            <template v-if="deliveryZone === 'minsk'">
+              <p>🩷 Доставка по Минску / по метро — <b class="text-ink-900">5–10 Br</b>, точную сумму подтвердит менеджер.</p>
+              <p>🩷 Заказы принимаются до <b class="text-ink-900">17:00</b>, позже — по возможности курьера.</p>
+              <p>🩷 Если не выйти к курьеру, стоимость доставки удваивается.</p>
+            </template>
+            <template v-else>
+              <p>🩷 Доставка по Лошице-2 — <b class="text-ink-900">2 Br</b>, с <b class="text-ink-900">18:00 до 22:00</b>.</p>
+              <p>🩷 В остальное время можно забрать заказ самовывозом.</p>
+              <p>🩷 Заказы принимаются до <b class="text-ink-900">17:50–18:00</b>.</p>
+              <p>🩷 Если не выйти к курьеру, +5 Br к сумме заказа.</p>
+            </template>
+          </div>
+        </template>
 
         <button class="btn-primary w-full mt-2" :disabled="submitting" @click="submit">
           {{ submitting ? 'Оформляем...' : 'Оформить заказ' }}
@@ -171,7 +245,7 @@ import { useCatalogStore } from '@/stores/catalog'
 import { useTelegram } from '@/composables/useTelegram'
 import { ordersApi, contentApi, scheduleApi, productsApi } from '@/api'
 import BynIcon from '@/components/BynIcon.vue'
-import type { Discount, AvailableDay, CartItem } from '@/types'
+import type { Discount, AvailableDay, CartItem, FulfillmentType, DeliveryZone } from '@/types'
 
 const cart = useCartStore()
 const catalog = useCatalogStore()
@@ -195,7 +269,15 @@ const form = ref({
   username: user.value?.username ? '@' + user.value.username : '—',
   pickup_time: '',
 })
-const errors = ref<{ pickup_time?: string }>({})
+const errors = ref<{ pickup_time?: string; delivery_zone?: string; delivery_address?: string }>({})
+
+const fulfillmentType = ref<FulfillmentType>('pickup')
+const deliveryZone = ref<DeliveryZone | ''>('')
+const deliveryAddress = ref('')
+// Лошица-2 — фиксированная цена, показываем сразу; Минск/по метро — диапазон,
+// сумму вписывает менеджер после оформления, в подсчёт итога не включаем.
+const DELIVERY_FIXED_COST: Record<string, number> = { loshitsa: 2 }
+const deliveryCost = computed(() => DELIVERY_FIXED_COST[deliveryZone.value] ?? 0)
 
 const selectedDaySlots = computed(() =>
   availableDays.value.find(d => d.date === selectedDate.value)?.slots ?? []
@@ -204,7 +286,7 @@ const discountAmount = computed(() => {
   if (!appliedDiscount.value) return 0
   return Math.round(cart.total * appliedDiscount.value.percent / 100)
 })
-const finalTotal = computed(() => cart.total - discountAmount.value)
+const finalTotal = computed(() => cart.total - discountAmount.value + (fulfillmentType.value === 'delivery' ? deliveryCost.value : 0))
 
 function formatPrice(p: number) { return p.toLocaleString('ru-RU') }
 function dec(item: CartItem) {
@@ -251,7 +333,12 @@ async function applyDiscount() {
 
 function validate() {
   errors.value = {}
-  if (!form.value.pickup_time) errors.value.pickup_time = 'Выберите время'
+  if (fulfillmentType.value === 'delivery') {
+    if (!deliveryZone.value) errors.value.delivery_zone = 'Выберите район'
+    if (deliveryAddress.value.trim().length < 5) errors.value.delivery_address = 'Укажите адрес доставки'
+  } else {
+    if (!form.value.pickup_time) errors.value.pickup_time = 'Выберите время'
+  }
   return !Object.keys(errors.value).length
 }
 
@@ -310,8 +397,11 @@ async function submit() {
     await ordersApi.create({
       tg_username: form.value.username || undefined,
       items: itemsWithPrice,
-      pickup_time: `${selectedDate.value} ${form.value.pickup_time}`,
       discount_id: appliedDiscount.value?.id,
+      fulfillment_type: fulfillmentType.value,
+      ...(fulfillmentType.value === 'delivery'
+        ? { delivery_zone: deliveryZone.value, delivery_address: deliveryAddress.value.trim() }
+        : { pickup_time: `${selectedDate.value} ${form.value.pickup_time}` }),
     })
     
     notify('success')

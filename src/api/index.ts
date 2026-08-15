@@ -2,7 +2,8 @@ import http from './http'
 import type {
   Product, Category, SubCategory, SubSubCategory,
   Order, OrderStatus, NewsItem, Discount, DiscountCheckResult,
-  Arrival, ScheduleDay, AvailableDay, UserProfile, UserSummary
+  Arrival, ScheduleDay, AvailableDay, UserProfile, UserSummary,
+  FulfillmentType, DeliveryZone
 } from '@/types'
 
 export const productsApi = {
@@ -17,13 +18,18 @@ export const ordersApi = {
   create: (data: {
     tg_username?: string
     items: { product_id: string; quantity: number }[]
-    pickup_time: string
+    pickup_time?: string
     discount_id?: string
+    fulfillment_type?: FulfillmentType
+    delivery_zone?: DeliveryZone | ''
+    delivery_address?: string
   }) => http.post<Order>('/orders', data, { timeout: 30000 }).then(r => r.data),
   getMine:      () => http.get<Order[]>('/orders/mine').then(r => r.data),
   getAll:       () => http.get<Order[]>('/admin/orders').then(r => r.data),
   updateStatus: (id: string, status: OrderStatus) =>
     http.patch<Order>(`/admin/orders/${id}/status`, { status }).then(r => r.data),
+  updateDeliveryCost: (id: string, delivery_cost: number) =>
+    http.patch(`/admin/orders/${id}/delivery-cost`, { delivery_cost }).then(r => r.data),
 }
 
 export const contentApi = {

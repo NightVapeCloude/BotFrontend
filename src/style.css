@@ -118,3 +118,21 @@
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: rgb(var(--color-surface-border)); border-radius: 4px; }
+
+/* iOS WebKit (incl. Telegram in-app browser) gives <input type="date"> its own
+   intrinsic sizing on top of our .form-input styles (w-full etc.), rendering it
+   much wider/taller than the actual "дд.мм.гггг" content needs. Pin explicit
+   dimensions instead of letting it stretch to fill the row.
+   Selector includes .form-input (not just the attribute) so its specificity
+   (0,2,1) beats the component-scoped `.form-input[data-v-xxx]` (0,2,0) that
+   AdminContentList.vue/CartPage.vue/ProfilePage.vue each declare locally. */
+input[type="date"].form-input {
+  height: 44px;
+  min-height: 44px;
+  width: 160px;
+  max-width: 100%;
+  padding-top: 0;
+  padding-bottom: 0;
+  -webkit-appearance: none;
+  appearance: none;
+}

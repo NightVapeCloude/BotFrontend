@@ -3,7 +3,11 @@
     <div class="flex items-start justify-between gap-2">
       <div>
         <p class="text-xs text-ink-700 font-mono">#{{ order.id.slice(-6).toUpperCase() }}</p>
-        <p class="text-sm font-semibold text-ink-900 mt-0.5">{{ order.pickup_time }}</p>
+        <p class="text-sm font-semibold text-ink-900 mt-0.5">
+          <template v-if="order.fulfillment_type === 'delivery'">🚚 {{ DELIVERY_ZONE_LABELS[order.delivery_zone] || 'Доставка' }}</template>
+          <template v-else>{{ order.pickup_time }}</template>
+        </p>
+        <p v-if="order.fulfillment_type === 'delivery'" class="text-xs text-ink-700 mt-0.5">📍 {{ order.delivery_address }}</p>
         <p class="text-xs text-ink-700 mt-0.5">{{ formatDate(order.created_at) }}</p>
       </div>
       <StatusBadge :status="order.status" />
@@ -42,6 +46,8 @@ import BynIcon from './BynIcon.vue'
 import type { Order } from '@/types'
 
 defineProps<{ order: Order }>()
+
+const DELIVERY_ZONE_LABELS: Record<string, string> = { minsk: 'Минск/по метро', loshitsa: 'Лошица-2' }
 
 function formatPrice(p: number) { return p.toLocaleString('ru-RU') }
 function formatDate(s: string) {

@@ -15,7 +15,14 @@
           <div>
             <p class="text-xs text-ink-700 font-mono">#{{ order.id.slice(-6).toUpperCase() }}</p>
             <p class="text-sm font-semibold text-ink-900">{{ order.tg_username }}</p>
-            <p class="text-xs text-ink-700 mt-0.5">{{ order.pickup_time }} · {{ formatDate(order.created_at) }}</p>
+            <p class="text-xs text-ink-700 mt-0.5">
+              <template v-if="order.fulfillment_type === 'delivery'">
+                🚚 {{ DELIVERY_ZONE_LABELS[order.delivery_zone] || order.delivery_zone }}
+              </template>
+              <template v-else>{{ order.pickup_time }}</template>
+              · {{ formatDate(order.created_at) }}
+            </p>
+            <p v-if="order.fulfillment_type === 'delivery'" class="text-xs text-ink-700 mt-0.5">📍 {{ order.delivery_address }}</p>
           </div>
           <StatusBadge :status="order.status" />
         </div>
@@ -24,6 +31,24 @@
           <div v-for="item in order.items" :key="item.product.id">
             {{ item.product.name }} × {{ item.quantity }}
           </div>
+        </div>
+
+        <!-- Доставка по Минску: стоимость вписывает менеджер вручную -->
+        <div v-if="order.fulfillment_type === 'delivery'" class="flex items-center gap-2 pt-1 border-t border-surface-border">
+          <span class="text-xs text-ink-700 flex-shrink-0">Доставка:</span>
+          <template v-if="order.delivery_zone === 'loshitsa'">
+            <div class="flex items-center gap-1">
+              <span class="text-sm font-semibold text-ink-900">{{ formatPrice(order.delivery_cost) }}</span>
+              <BynIcon :size="10" class="text-ink-900" />
+            </div>
+          </template>
+          <template v-else>
+            <input v-model.number="deliveryCostDrafts[order.id]" type="number" min="0" step="0.5"
+              placeholder="0" class="w-16 bg-surface-muted border border-surface-border rounded-lg px-2 py-1 text-xs text-ink-900 outline-none focus:border-indigo-500" />
+            <button class="text-xs px-2 py-1 rounded-lg font-semibold bg-indigo-500/20 text-indigo-600 active:scale-95 transition-all"
+              @click="saveDeliveryCost(order)">Сохранить</button>
+            <span v-if="order.delivery_cost" class="text-xs text-ink-700">(сейчас {{ formatPrice(order.delivery_cost) }})</span>
+          </template>
         </div>
 
         <div class="flex items-center justify-between pt-1 border-t border-surface-border">
@@ -65,6 +90,8 @@ import type { Order, OrderStatus } from '@/types'
 const orders = ref<Order[]>([])
 const loading = ref(true)
 const { haptic, notify, tg } = useTelegram()
+const DELIVERY_ZONE_LABELS: Record<string, string> = { minsk: 'Минск/по метро', loshitsa: 'Лошица-2' }
+const deliveryCostDrafts = ref<Record<string, number>>({})
 
 function formatPrice(p: number) { return p.toLocaleString('ru-RU') }
 function formatDate(s: string) {
@@ -108,9 +135,31 @@ async function updateStatus(order: Order, status: OrderStatus) {
   }
 }
 
+async function saveDeliveryCost(order: Order) {
+  const cost = deliveryCostDrafts.value[order.id]
+  if (cost === undefined || cost === null || cost < 0) return
+  haptic('medium')
+  try {
+    await ordersApi.updateDeliveryCost(order.id, cost)
+    order.delivery_cost = cost
+    notify('success')
+  } catch {
+    notify('error')
+    if (tg) tg.showAlert({ message: 'Не удалось сохранить стоимость доставки' })
+    else alert('Не удалось сохранить стоимость доставки')
+  }
+}
+
 async function load() {
   loading.value = true
-  try { orders.value = await ordersApi.getAll() }
+  try {
+    orders.value = await ordersApi.getAll()
+    for (const o of orders.value) {
+      if (o.fulfillment_type === 'delivery' && o.delivery_zone === 'minsk') {
+        deliveryCostDrafts.value[o.id] = o.delivery_cost || 0
+      }
+    }
+  }
   finally { loading.value = false }
 }
 
