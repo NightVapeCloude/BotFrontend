@@ -90,7 +90,7 @@ import type { Order, OrderStatus } from '@/types'
 const orders = ref<Order[]>([])
 const loading = ref(true)
 const { haptic, notify, tg } = useTelegram()
-const DELIVERY_ZONE_LABELS: Record<string, string> = { minsk: 'Минск/по метро', loshitsa: 'Лошица-2' }
+const DELIVERY_ZONE_LABELS: Record<string, string> = { minsk: 'Минск/по метро', loshitsa: 'Лошица' }
 const deliveryCostDrafts = ref<Record<string, number>>({})
 
 function formatPrice(p: number) { return p.toLocaleString('ru-RU') }

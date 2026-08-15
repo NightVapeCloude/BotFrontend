@@ -201,7 +201,7 @@
                 class="py-2.5 px-2 rounded-xl text-xs font-semibold transition-all duration-150 active:scale-95 leading-snug"
                 :class="deliveryZone === 'loshitsa' ? 'bg-indigo-500 text-white' : 'bg-surface-muted border border-surface-border text-ink-700'"
                 @click="deliveryZone = 'loshitsa'">
-                Лошица-2
+                Лошица
               </button>
             </div>
             <p v-if="errors.delivery_zone" class="text-red-700 text-xs mt-1">{{ errors.delivery_zone }}</p>
@@ -221,7 +221,7 @@
               <p>🩷 Если не выйти к курьеру, стоимость доставки удваивается.</p>
             </template>
             <template v-else>
-              <p>🩷 Доставка по Лошице-2 — <b class="text-ink-900">2 Br</b>, с <b class="text-ink-900">18:00 до 22:00</b>.</p>
+              <p>🩷 Доставка по Лошице — <b class="text-ink-900">2 Br</b>, с <b class="text-ink-900">18:00 до 22:00</b>.</p>
               <p>🩷 В остальное время можно забрать заказ самовывозом.</p>
               <p>🩷 Заказы принимаются до <b class="text-ink-900">17:50–18:00</b>.</p>
               <p>🩷 Если не выйти к курьеру, +5 Br к сумме заказа.</p>
@@ -274,7 +274,7 @@ const errors = ref<{ pickup_time?: string; delivery_zone?: string; delivery_addr
 const fulfillmentType = ref<FulfillmentType>('pickup')
 const deliveryZone = ref<DeliveryZone | ''>('')
 const deliveryAddress = ref('')
-// Лошица-2 — фиксированная цена, показываем сразу; Минск/по метро — диапазон,
+// Лошица — фиксированная цена, показываем сразу; Минск/по метро — диапазон,
 // сумму вписывает менеджер после оформления, в подсчёт итога не включаем.
 const DELIVERY_FIXED_COST: Record<string, number> = { loshitsa: 2 }
 const deliveryCost = computed(() => DELIVERY_FIXED_COST[deliveryZone.value] ?? 0)
