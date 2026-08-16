@@ -56,12 +56,16 @@ const tabs = computed(() => {
 </script>
 
 <style>
-/* !important: page roots carry their own permanent animate-fade-in/slide-up
-   class (see e.g. HomePage.vue). Without it, that class's `animation-name`
-   wins the cascade over these, so `page-leave-active`'s animation never
-   actually runs — no animationend ever fires, and Vue's <Transition
-   mode="out-in"> hangs forever waiting for the leave phase to finish,
-   silently blocking all navigation. */
+/* This Transition wrapper is the ONLY thing that should ever animate a page
+   root's entrance/exit. Page components used to carry their own permanent
+   animate-fade-in/slide-up class on their root — that competed with
+   page-leave-active's animation-name in the cascade, so page-leave-active
+   never actually ran, no animationend ever fired, and <Transition
+   mode="out-in"> hung forever waiting for the leave phase, silently blocking
+   all navigation. Those classes were removed from every page root; if you're
+   adding a new page, do NOT give its root its own animate-* class — it will
+   either double-animate (once here, once on the page) or reintroduce the hang.
+   !important is kept as a second line of defense against exactly that. */
 .page-enter-active { animation: slideUp 0.3s cubic-bezier(0.16,1,0.3,1) !important; }
 .page-leave-active { animation: fadeOut 0.15s ease !important; }
 @keyframes slideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }

@@ -112,6 +112,13 @@ export interface Order {
   delivery_cost: number
 }
 
+// Единственный источник правды для "сколько реально заплатит/заплатил
+// покупатель" — order.total никогда не включает доставку (см. backend),
+// раньше это независимо пересчитывалось в OrderCard.vue и AdminOrders.vue.
+export function orderGrandTotal(order: Order): number {
+  return order.total + (order.fulfillment_type === 'delivery' ? order.delivery_cost : 0)
+}
+
 export type OrderStatus = 'new' | 'confirmed' | 'done' | 'cancelled'
 
 export interface NewsItem {

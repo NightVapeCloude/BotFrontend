@@ -37,7 +37,7 @@
         </div>
       </div>
       <div class="flex items-center gap-1">
-        <span class="font-display font-bold text-indigo-600 text-sm">{{ formatPrice(orderGrandTotal) }}</span>
+        <span class="font-display font-bold text-indigo-600 text-sm">{{ formatPrice(grandTotal) }}</span>
         <BynIcon :size="12" class="text-indigo-600" />
       </div>
     </div>
@@ -49,13 +49,11 @@ import StatusBadge from './StatusBadge.vue'
 import BynIcon from './BynIcon.vue'
 import { computed } from 'vue'
 import type { Order } from '@/types'
-import { DELIVERY_ZONE_LABELS } from '@/types'
+import { DELIVERY_ZONE_LABELS, orderGrandTotal } from '@/types'
 
 const props = defineProps<{ order: Order }>()
 
-const orderGrandTotal = computed(() =>
-  props.order.total + (props.order.fulfillment_type === 'delivery' ? props.order.delivery_cost : 0)
-)
+const grandTotal = computed(() => orderGrandTotal(props.order))
 
 function formatPrice(p: number) { return p.toLocaleString('ru-RU') }
 function formatDate(s: string) {

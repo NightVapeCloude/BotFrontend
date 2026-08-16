@@ -44,7 +44,8 @@
           </template>
           <template v-else>
             <input v-model.number="deliveryCostDrafts[order.id]" type="number" min="0" step="0.5"
-              placeholder="0" class="w-16 bg-surface-muted border border-surface-border rounded-lg px-2 py-1 text-xs text-ink-900 outline-none focus:border-indigo-500" />
+              placeholder="0" @input="deliveryCostDirty.add(order.id)"
+              class="w-16 bg-surface-muted border border-surface-border rounded-lg px-2 py-1 text-xs text-ink-900 outline-none focus:border-indigo-500" />
             <button class="text-xs px-2 py-1 rounded-lg font-semibold bg-indigo-500/20 text-indigo-600 active:scale-95 transition-all"
               @click="saveDeliveryCost(order)">Сохранить</button>
             <span v-if="order.delivery_cost" class="text-xs text-ink-700">(сейчас {{ formatPrice(order.delivery_cost) }})</span>
@@ -62,7 +63,7 @@
               <BynIcon :size="10" class="text-green-800" />
             </div>
             <div v-if="order.fulfillment_type === 'delivery' && order.delivery_cost" class="flex items-center gap-1 mt-0.5">
-              <span class="text-xs text-ink-700">с доставкой: {{ formatPrice(order.total + order.delivery_cost) }}</span>
+              <span class="text-xs text-ink-700">с доставкой: {{ formatPrice(orderGrandTotal(order)) }}</span>
               <BynIcon :size="10" class="text-ink-700" />
             </div>
           </div>
@@ -90,12 +91,18 @@ import SkeletonBox from '@/components/SkeletonBox.vue'
 import StatusBadge from '@/components/StatusBadge.vue'
 import BynIcon from '@/components/BynIcon.vue'
 import type { Order, OrderStatus } from '@/types'
-import { DELIVERY_ZONE_LABELS } from '@/types'
+import { DELIVERY_ZONE_LABELS, orderGrandTotal } from '@/types'
 
 const orders = ref<Order[]>([])
 const loading = ref(true)
 const { haptic, notify, tg } = useTelegram()
 const deliveryCostDrafts = ref<Record<string, number>>({})
+// Заказы, черновик которых админ реально печатал в этой сессии и ещё не
+// сохранил — только их не трогаем при обновлении списка. Все остальные
+// драфты пересинхронизируются с сервером на каждый load(), иначе после
+// успешного saveDeliveryCost (или правки другим админом) поле навсегда
+// застревает со старым значением.
+const deliveryCostDirty = ref<Set<string>>(new Set())
 
 function formatPrice(p: number) { return p.toLocaleString('ru-RU') }
 function formatDate(s: string) {
@@ -146,6 +153,7 @@ async function saveDeliveryCost(order: Order) {
   try {
     await ordersApi.updateDeliveryCost(order.id, cost)
     order.delivery_cost = cost
+    deliveryCostDirty.value.delete(order.id)
     notify('success')
   } catch {
     notify('error')
@@ -160,8 +168,10 @@ async function load() {
     orders.value = await ordersApi.getAll()
     for (const o of orders.value) {
       // Не затираем то, что админ уже печатает, но ещё не сохранил
-      // (например, случайно нажал «Обновить» вместо «Сохранить»).
-      if (o.fulfillment_type === 'delivery' && o.delivery_zone === 'minsk' && !(o.id in deliveryCostDrafts.value)) {
+      // (например, случайно нажал «Обновить» вместо «Сохранить») — но всё
+      // остальное подтягиваем заново, иначе после сохранения или правки
+      // другим админом поле навсегда останется со старым значением.
+      if (o.fulfillment_type === 'delivery' && o.delivery_zone === 'minsk' && !deliveryCostDirty.value.has(o.id)) {
         deliveryCostDrafts.value[o.id] = o.delivery_cost || 0
       }
     }
