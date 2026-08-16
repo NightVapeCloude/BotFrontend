@@ -1,5 +1,5 @@
 <template>
-  <div class="px-4 pt-6 pb-4 animate-fade-in">
+  <div class="px-4 pt-6 pb-4">
 
     <!-- Всплывающее уведомление -->
     <Teleport to="body">

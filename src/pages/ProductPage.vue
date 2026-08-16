@@ -1,5 +1,5 @@
 <template>
-  <div class="animate-fade-in">
+  <div>
     <div class="px-4 pt-4 pb-2">
       <button class="inline-flex items-center gap-1.5 text-ink-700 hover:text-ink-900 text-sm transition-colors"
         @click="$router.back()">

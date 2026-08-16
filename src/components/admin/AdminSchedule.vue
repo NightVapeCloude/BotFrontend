@@ -67,7 +67,7 @@
     <div class="card p-4 space-y-3">
       <div class="flex items-center justify-between">
         <h3 class="font-display font-semibold text-sm text-ink-900">Условия доставки</h3>
-        <button class="btn-primary px-4 py-2 text-sm" :disabled="savingDelivery" @click="saveDelivery">
+        <button class="btn-primary px-4 py-2 text-sm" :disabled="savingDelivery || deliveryLoadError" @click="saveDelivery">
           {{ savingDelivery ? 'Сохраняем...' : 'Сохранить' }}
         </button>
       </div>
@@ -76,6 +76,10 @@
         <SkeletonBox height="80px" width="100%" />
         <SkeletonBox height="80px" width="100%" />
       </div>
+      <p v-else-if="deliveryLoadError" class="text-sm text-red-700">
+        Не удалось загрузить текущие условия доставки. Обновите страницу и попробуйте снова —
+        сохранение отключено, чтобы случайно не затереть реальный текст пустым.
+      </p>
       <template v-else>
         <div>
           <label class="delivery-label">Лошица — цена (Br)</label>
@@ -112,6 +116,7 @@ const { haptic, notify } = useTelegram()
 
 const loadingDelivery = ref(true)
 const savingDelivery = ref(false)
+const deliveryLoadError = ref(false)
 const delivery = ref<DeliverySettings>({ loshitsa_cost: 2, loshitsa_terms: '', minsk_terms: '' })
 
 const dayOrder: ScheduleDay['day'][] = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
@@ -191,6 +196,10 @@ onMounted(async () => {
 
   try {
     delivery.value = await scheduleApi.getDeliverySettings()
+  } catch {
+    // Не показываем плейсхолдер-заглушку как будто это реальные условия —
+    // иначе админ может случайно сохранить пустой текст поверх настоящего.
+    deliveryLoadError.value = true
   } finally {
     loadingDelivery.value = false
   }

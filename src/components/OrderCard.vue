@@ -31,9 +31,13 @@
           Скидка −{{ formatPrice(order.discount_amount) }}
           <BynIcon :size="9" class="inline text-green-800" />
         </div>
+        <div v-if="order.fulfillment_type === 'delivery' && order.delivery_cost" class="text-xs text-ink-700">
+          + доставка {{ formatPrice(order.delivery_cost) }}
+          <BynIcon :size="9" class="inline text-ink-700" />
+        </div>
       </div>
       <div class="flex items-center gap-1">
-        <span class="font-display font-bold text-indigo-600 text-sm">{{ formatPrice(order.total) }}</span>
+        <span class="font-display font-bold text-indigo-600 text-sm">{{ formatPrice(orderGrandTotal) }}</span>
         <BynIcon :size="12" class="text-indigo-600" />
       </div>
     </div>
@@ -43,11 +47,15 @@
 <script setup lang="ts">
 import StatusBadge from './StatusBadge.vue'
 import BynIcon from './BynIcon.vue'
+import { computed } from 'vue'
 import type { Order } from '@/types'
+import { DELIVERY_ZONE_LABELS } from '@/types'
 
-defineProps<{ order: Order }>()
+const props = defineProps<{ order: Order }>()
 
-const DELIVERY_ZONE_LABELS: Record<string, string> = { minsk: 'Минск/по метро', loshitsa: 'Лошица' }
+const orderGrandTotal = computed(() =>
+  props.order.total + (props.order.fulfillment_type === 'delivery' ? props.order.delivery_cost : 0)
+)
 
 function formatPrice(p: number) { return p.toLocaleString('ru-RU') }
 function formatDate(s: string) {

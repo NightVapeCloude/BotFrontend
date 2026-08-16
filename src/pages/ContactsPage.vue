@@ -1,5 +1,5 @@
 <template>
-  <div class="px-4 pt-6 pb-4 space-y-4 animate-fade-in">
+  <div class="px-4 pt-6 pb-4 space-y-4">
     <h1 class="font-display text-xl font-bold text-ink-900">Контакты</h1>
 
     <div class="space-y-3">

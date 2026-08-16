@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col min-h-full animate-fade-in">
+  <div class="flex flex-col min-h-full">
 
     <!-- Экран 1: Категории -->
     <template v-if="!activeCategory">

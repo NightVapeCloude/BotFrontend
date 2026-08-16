@@ -1,5 +1,5 @@
 <template>
-  <div class="animate-fade-in">
+  <div>
     <div class="px-4 pt-6 pb-3 sticky top-0 z-10 bg-surface/90 backdrop-blur-xl border-b border-surface-border">
       <div class="flex items-center gap-2 mb-3">
         <div class="w-8 h-8 rounded-xl bg-amber-500/20 flex items-center justify-center">

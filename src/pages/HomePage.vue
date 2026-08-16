@@ -1,5 +1,5 @@
 <template>
-  <div class="px-4 pt-6 pb-4 space-y-6 animate-fade-in">
+  <div class="px-4 pt-6 pb-4 space-y-6">
     <div>
       <h1 class="font-display text-xl font-bold text-ink-900">Главная</h1>
       <p class="text-ink-700 text-sm mt-0.5">{{ greeting }}</p>

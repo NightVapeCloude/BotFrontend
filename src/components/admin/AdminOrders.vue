@@ -61,6 +61,10 @@
               <span class="text-xs text-green-800">скидка −{{ formatPrice(order.discount_amount) }}</span>
               <BynIcon :size="10" class="text-green-800" />
             </div>
+            <div v-if="order.fulfillment_type === 'delivery' && order.delivery_cost" class="flex items-center gap-1 mt-0.5">
+              <span class="text-xs text-ink-700">с доставкой: {{ formatPrice(order.total + order.delivery_cost) }}</span>
+              <BynIcon :size="10" class="text-ink-700" />
+            </div>
           </div>
           <div class="flex gap-1.5">
             <button v-for="action in statusActions(order.status)" :key="action.status"
@@ -86,11 +90,11 @@ import SkeletonBox from '@/components/SkeletonBox.vue'
 import StatusBadge from '@/components/StatusBadge.vue'
 import BynIcon from '@/components/BynIcon.vue'
 import type { Order, OrderStatus } from '@/types'
+import { DELIVERY_ZONE_LABELS } from '@/types'
 
 const orders = ref<Order[]>([])
 const loading = ref(true)
 const { haptic, notify, tg } = useTelegram()
-const DELIVERY_ZONE_LABELS: Record<string, string> = { minsk: 'Минск/по метро', loshitsa: 'Лошица' }
 const deliveryCostDrafts = ref<Record<string, number>>({})
 
 function formatPrice(p: number) { return p.toLocaleString('ru-RU') }
@@ -155,7 +159,9 @@ async function load() {
   try {
     orders.value = await ordersApi.getAll()
     for (const o of orders.value) {
-      if (o.fulfillment_type === 'delivery' && o.delivery_zone === 'minsk') {
+      // Не затираем то, что админ уже печатает, но ещё не сохранил
+      // (например, случайно нажал «Обновить» вместо «Сохранить»).
+      if (o.fulfillment_type === 'delivery' && o.delivery_zone === 'minsk' && !(o.id in deliveryCostDrafts.value)) {
         deliveryCostDrafts.value[o.id] = o.delivery_cost || 0
       }
     }

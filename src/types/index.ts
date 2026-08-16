@@ -91,6 +91,9 @@ export interface AvailableDay {
 
 export type FulfillmentType = 'pickup' | 'delivery'
 export type DeliveryZone = 'minsk' | 'loshitsa'
+// Единственный источник правды для лейблов зон на фронте — раньше эта карта была
+// продублирована в OrderCard.vue и AdminOrders.vue и могла разойтись между собой.
+export const DELIVERY_ZONE_LABELS: Record<string, string> = { minsk: 'Минск/по метро', loshitsa: 'Лошица' }
 
 export interface Order {
   id: string

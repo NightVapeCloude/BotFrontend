@@ -1,5 +1,5 @@
 <template>
-  <div class="px-4 pt-6 pb-4 space-y-5 animate-fade-in">
+  <div class="px-4 pt-6 pb-4 space-y-5">
     <!-- User card -->
     <div class="card p-4 flex items-center gap-4">
       <div class="w-14 h-14 rounded-2xl bg-brand-500/20 flex items-center justify-center flex-shrink-0">
