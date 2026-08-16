@@ -127,6 +127,12 @@ export interface Arrival {
   is_active: boolean
 }
 
+export interface DeliverySettings {
+  loshitsa_cost: number
+  loshitsa_terms: string
+  minsk_terms: string
+}
+
 export interface ScheduleDay {
   day: 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun'
   open_time: string

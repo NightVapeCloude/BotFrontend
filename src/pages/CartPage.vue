@@ -214,18 +214,8 @@
             <p v-if="errors.delivery_address" class="text-red-700 text-xs mt-1">{{ errors.delivery_address }}</p>
           </div>
 
-          <div v-if="deliveryZone" class="bg-surface-muted rounded-xl p-3 text-xs text-ink-700 leading-relaxed space-y-1.5">
-            <template v-if="deliveryZone === 'minsk'">
-              <p>🩷 Доставка по Минску / по метро — <b class="text-ink-900">5–10 Br</b>, точную сумму подтвердит менеджер.</p>
-              <p>🩷 Заказы принимаются до <b class="text-ink-900">17:00</b>, позже — по возможности курьера.</p>
-              <p>🩷 Если не выйти к курьеру, стоимость доставки удваивается.</p>
-            </template>
-            <template v-else>
-              <p>🩷 Доставка по Лошице — <b class="text-ink-900">2 Br</b>, с <b class="text-ink-900">18:00 до 22:00</b>.</p>
-              <p>🩷 В остальное время можно забрать заказ самовывозом.</p>
-              <p>🩷 Заказы принимаются до <b class="text-ink-900">17:50–18:00</b>.</p>
-              <p>🩷 Если не выйти к курьеру, +5 Br к сумме заказа.</p>
-            </template>
+          <div v-if="deliveryZone" class="bg-surface-muted rounded-xl p-3 text-xs text-ink-700 leading-relaxed whitespace-pre-line">
+            {{ deliveryTermsText }}
           </div>
         </template>
 
@@ -245,7 +235,7 @@ import { useCatalogStore } from '@/stores/catalog'
 import { useTelegram } from '@/composables/useTelegram'
 import { ordersApi, contentApi, scheduleApi, productsApi } from '@/api'
 import BynIcon from '@/components/BynIcon.vue'
-import type { Discount, AvailableDay, CartItem, FulfillmentType, DeliveryZone } from '@/types'
+import type { Discount, AvailableDay, CartItem, FulfillmentType, DeliveryZone, DeliverySettings } from '@/types'
 
 const cart = useCartStore()
 const catalog = useCatalogStore()
@@ -274,10 +264,19 @@ const errors = ref<{ pickup_time?: string; delivery_zone?: string; delivery_addr
 const fulfillmentType = ref<FulfillmentType>('pickup')
 const deliveryZone = ref<DeliveryZone | ''>('')
 const deliveryAddress = ref('')
-// Лошица — фиксированная цена, показываем сразу; Минск/по метро — диапазон,
-// сумму вписывает менеджер после оформления, в подсчёт итога не включаем.
-const DELIVERY_FIXED_COST: Record<string, number> = { loshitsa: 2 }
-const deliveryCost = computed(() => DELIVERY_FIXED_COST[deliveryZone.value] ?? 0)
+// Лошица — фиксированная цена (редактируется в админке, Админ → График),
+// показываем сразу; Минск/по метро — диапазон, сумму вписывает менеджер
+// после оформления, в подсчёт итога не включаем.
+const deliverySettings = ref<DeliverySettings | null>(null)
+const deliveryCost = computed(() => (deliveryZone.value === 'loshitsa' ? deliverySettings.value?.loshitsa_cost ?? 0 : 0))
+const deliveryTermsText = computed(() => {
+  if (!deliverySettings.value) return ''
+  if (deliveryZone.value === 'minsk') return deliverySettings.value.minsk_terms
+  if (deliveryZone.value === 'loshitsa') {
+    return deliverySettings.value.loshitsa_terms.replace('{cost}', formatPrice(deliverySettings.value.loshitsa_cost))
+  }
+  return ''
+})
 
 const selectedDaySlots = computed(() =>
   availableDays.value.find(d => d.date === selectedDate.value)?.slots ?? []
@@ -449,6 +448,12 @@ onMounted(async () => {
     // Расписание недоступно — пользователь может перезагрузить страницу
   } finally {
     loadingDays.value = false
+  }
+
+  try {
+    deliverySettings.value = await scheduleApi.getDeliverySettings()
+  } catch (error: unknown) {
+    console.error('[CartPage] Ошибка загрузки условий доставки:', error)
   }
 })
 </script>

@@ -62,6 +62,38 @@
       </div>
       <p v-else class="text-sm text-ink-700">Сегодня выходной</p>
     </div>
+
+    <!-- Условия доставки -->
+    <div class="card p-4 space-y-3">
+      <div class="flex items-center justify-between">
+        <h3 class="font-display font-semibold text-sm text-ink-900">Условия доставки</h3>
+        <button class="btn-primary px-4 py-2 text-sm" :disabled="savingDelivery" @click="saveDelivery">
+          {{ savingDelivery ? 'Сохраняем...' : 'Сохранить' }}
+        </button>
+      </div>
+
+      <div v-if="loadingDelivery" class="space-y-2">
+        <SkeletonBox height="80px" width="100%" />
+        <SkeletonBox height="80px" width="100%" />
+      </div>
+      <template v-else>
+        <div>
+          <label class="delivery-label">Лошица — цена (Br)</label>
+          <input v-model.number="delivery.loshitsa_cost" type="number" min="0" step="0.5" class="delivery-input w-24" />
+        </div>
+        <div>
+          <label class="delivery-label">Лошица — текст условий (используй {cost} для подстановки цены)</label>
+          <textarea v-model="delivery.loshitsa_terms" rows="4" class="delivery-input" />
+        </div>
+        <div>
+          <label class="delivery-label">Минск / по метро — текст условий</label>
+          <textarea v-model="delivery.minsk_terms" rows="3" class="delivery-input" />
+        </div>
+        <p class="text-[11px] text-ink-700">
+          Этот текст покупатель видит в корзине при выборе «Доставка». Каждая строка — отдельный пункт.
+        </p>
+      </template>
+    </div>
   </div>
 </template>
 
@@ -70,13 +102,17 @@ import { ref, computed, onMounted } from 'vue'
 import { scheduleApi } from '@/api'
 import { useTelegram } from '@/composables/useTelegram'
 import SkeletonBox from '@/components/SkeletonBox.vue'
-import type { ScheduleDay } from '@/types'
+import type { ScheduleDay, DeliverySettings } from '@/types'
 
 const loading = ref(true)
 const saving = ref(false)
 const schedule = ref<ScheduleDay[]>([])
 const interval = ref(10)
 const { haptic, notify } = useTelegram()
+
+const loadingDelivery = ref(true)
+const savingDelivery = ref(false)
+const delivery = ref<DeliverySettings>({ loshitsa_cost: 2, loshitsa_terms: '', minsk_terms: '' })
 
 const dayOrder: ScheduleDay['day'][] = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
 const dayNames: Record<string, string> = {
@@ -128,6 +164,19 @@ async function save() {
   }
 }
 
+async function saveDelivery() {
+  savingDelivery.value = true
+  haptic('medium')
+  try {
+    await scheduleApi.updateDeliverySettings(delivery.value)
+    notify('success')
+  } catch {
+    notify('error')
+  } finally {
+    savingDelivery.value = false
+  }
+}
+
 onMounted(async () => {
   try {
     const data = await scheduleApi.get()
@@ -139,6 +188,12 @@ onMounted(async () => {
   } finally {
     loading.value = false
   }
+
+  try {
+    delivery.value = await scheduleApi.getDeliverySettings()
+  } finally {
+    loadingDelivery.value = false
+  }
 })
 </script>
 
@@ -148,5 +203,10 @@ onMounted(async () => {
          text-sm text-ink-800 outline-none focus:border-indigo-500 transition-colors
          font-mono flex-1 min-w-0;
   color-scheme: dark;
+}
+.delivery-label { @apply block text-xs font-semibold text-ink-700 mb-1.5; }
+.delivery-input {
+  @apply w-full bg-surface-muted border border-surface-border rounded-xl px-3 py-2.5
+         text-sm text-ink-900 outline-none focus:border-indigo-500 transition-colors resize-none;
 }
 </style>

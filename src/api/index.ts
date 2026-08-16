@@ -3,7 +3,7 @@ import type {
   Product, Category, SubCategory, SubSubCategory,
   Order, OrderStatus, NewsItem, Discount, DiscountCheckResult,
   Arrival, ScheduleDay, AvailableDay, UserProfile, UserSummary,
-  FulfillmentType, DeliveryZone
+  FulfillmentType, DeliveryZone, DeliverySettings
 } from '@/types'
 
 export const productsApi = {
@@ -60,6 +60,9 @@ export const scheduleApi = {
   getSlots:      (date?: string) => http.get<string[]>('/schedule/slots', { params: date ? { date } : {} }).then(r => r.data),
   update:        (days: ScheduleDay[], interval: number) =>
     http.put('/admin/schedule', { days, interval }).then(r => r.data),
+  getDeliverySettings: () => http.get<DeliverySettings>('/delivery-settings').then(r => r.data),
+  updateDeliverySettings: (settings: DeliverySettings) =>
+    http.put<DeliverySettings>('/admin/delivery-settings', settings).then(r => r.data),
 }
 
 export const usersApi = {
