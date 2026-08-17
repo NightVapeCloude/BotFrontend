@@ -70,7 +70,7 @@
           <div class="flex gap-1.5">
             <button v-for="action in statusActions(order.status)" :key="action.status"
                     class="text-xs px-2.5 py-1 rounded-lg font-semibold transition-all active:scale-95"
-                    :class="action.cls"
+                    :class="action.status === 'confirmed' && needsDeliveryCostFirst(order) ? 'bg-surface-muted text-ink-500 opacity-60' : action.cls"
                     @click="updateStatus(order, action.status)">
               {{ action.label }}
             </button>
@@ -125,7 +125,17 @@ function statusActions(status: OrderStatus) {
   return map[status]
 }
 
+function needsDeliveryCostFirst(order: Order): boolean {
+  return order.fulfillment_type === 'delivery' && order.delivery_zone === 'minsk' && !order.delivery_cost
+}
+
 async function updateStatus(order: Order, status: OrderStatus) {
+  if (status === 'confirmed' && needsDeliveryCostFirst(order)) {
+    const message = 'Сначала укажите и сохраните стоимость доставки по Минску для этого заказа'
+    if (tg) tg.showAlert({ message })
+    else alert(message)
+    return
+  }
   haptic('medium')
   try {
     await ordersApi.updateStatus(order.id, status)
@@ -148,7 +158,7 @@ async function updateStatus(order: Order, status: OrderStatus) {
 
 async function saveDeliveryCost(order: Order) {
   const cost = deliveryCostDrafts.value[order.id]
-  if (cost === undefined || cost === null || cost < 0) return
+  if (cost === undefined || cost === null || typeof cost !== 'number' || Number.isNaN(cost) || cost < 0) return
   haptic('medium')
   try {
     await ordersApi.updateDeliveryCost(order.id, cost)

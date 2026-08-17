@@ -273,7 +273,7 @@ const deliveryTermsText = computed(() => {
   if (!deliverySettings.value) return ''
   if (deliveryZone.value === 'minsk') return deliverySettings.value.minsk_terms
   if (deliveryZone.value === 'loshitsa') {
-    return deliverySettings.value.loshitsa_terms.replace('{cost}', formatPrice(deliverySettings.value.loshitsa_cost))
+    return deliverySettings.value.loshitsa_terms.replace(/\{cost\}/g, formatPrice(deliverySettings.value.loshitsa_cost))
   }
   return ''
 })

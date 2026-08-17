@@ -112,7 +112,7 @@ const loading = ref(true)
 const saving = ref(false)
 const schedule = ref<ScheduleDay[]>([])
 const interval = ref(10)
-const { haptic, notify } = useTelegram()
+const { haptic, notify, tg } = useTelegram()
 
 const loadingDelivery = ref(true)
 const savingDelivery = ref(false)
@@ -170,6 +170,13 @@ async function save() {
 }
 
 async function saveDelivery() {
+  const cost = delivery.value.loshitsa_cost
+  if (typeof cost !== 'number' || Number.isNaN(cost) || cost < 0) {
+    notify('error')
+    if (tg) tg.showAlert({ message: 'Цена Лошицы должна быть числом ≥ 0' })
+    else alert('Цена Лошицы должна быть числом ≥ 0')
+    return
+  }
   savingDelivery.value = true
   haptic('medium')
   try {
